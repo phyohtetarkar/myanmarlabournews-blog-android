@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Myanmar Labour News</string>
+    <string name="by">by</string>
+    <string name="top">Top</string>
+    <string name="fab_content_desc">App Fab</string>
+    <string name="scroll_top">Scroll Top</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="download_pdf">Download PDF</string>
+    <string name="receive_notification">Receive notifications</string>
+    <string name="related_posts">Related posts</string>
+    <string name="no_data_found">No data found</string>
+    <string name="about">About</string>
+    <string name="share_app">Share App</string>
+    <string name="contact_us">Contact us</string>
+    <string name="setting">Setting</string>
+    <string name="more">More</string>
+    <string name="version_text">Version %s</string>
+    <string name="about_description">မြန်မာနိုင်ငံက အလုပ်သမားထုရင်ဆိုင်ကြုံတွေ့နေရသည့် အခက်အခဲများ၊အလုပ်သမားတို့၏အသံများ၊ ဥပဒေရေးရာ သိမှတ်ဖွယ်ရာများကို Myanmar Labour News သတင်းဌာနကနေအချိန်နှင့်တစ်ပြေးညီ တင်ဆက်ပေးသွားမှာဖြစ်ပါတယ်။</string>
+    <string name="contact_phone">+95 9 260 036 007</string>
+    <string name="contact_mail">myanmarlabournews@gmail.com</string>
+    <string name="send_message_to_us">Send message to us</string>
+    <string name="share">Share</string>
+    <string name="follow_us">Follow Us</string>
 </resources>

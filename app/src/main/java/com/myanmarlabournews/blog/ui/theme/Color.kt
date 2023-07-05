@@ -12,5 +12,6 @@ val Pink40 = Color(0xFF7D5260)
 
 val RedCustom = Color(0xFFE03535)
 
-val DarkCustom = Color(0xFF272727)
+val DarkCustom = Color(0xFF121212)
+val DarkCustomPrimary = Color(0xFF272727)
 val RedCustomDark = Color(0xFFEF3E36)
