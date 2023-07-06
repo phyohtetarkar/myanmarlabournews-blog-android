@@ -21,4 +21,6 @@
     <string name="send_message_to_us">Send message to us</string>
     <string name="share">Share</string>
     <string name="follow_us">Follow Us</string>
+    <string name="recent_posts">Recent posts</string>
+    <string name="explore">Explore</string>
 </resources>
