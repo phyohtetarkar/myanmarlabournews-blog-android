@@ -18,7 +18,9 @@ import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 @Composable
 fun BottomNavigationBar(
     selectedIndex: Int = 0,
-    onClick: (index: Int) -> Unit = {}
+    navigateToHome: () -> Unit = {},
+    navigateToSearch: () -> Unit = {},
+    navigateToMenu: () -> Unit = {},
 ) {
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.surface
@@ -30,7 +32,7 @@ fun BottomNavigationBar(
             icon = { Icon(Icons.Rounded.Newspaper, contentDescription = "Home") },
             label = { Text("Home") },
             selected = selectedIndex == 0,
-            onClick = { onClick(0) },
+            onClick = { navigateToHome() },
             alwaysShowLabel = false,
             selectedContentColor = MaterialTheme.colors.secondary,
             unselectedContentColor = unselectedColor
@@ -39,7 +41,7 @@ fun BottomNavigationBar(
             icon = { Icon(Icons.Rounded.Search, contentDescription = "Search") },
             label = { Text("Search") },
             selected = selectedIndex == 1,
-            onClick = { onClick(1) },
+            onClick = { navigateToSearch() },
             alwaysShowLabel = false,
             selectedContentColor = MaterialTheme.colors.secondary,
             unselectedContentColor = unselectedColor
@@ -48,7 +50,7 @@ fun BottomNavigationBar(
             icon = { Icon(Icons.Rounded.Menu, contentDescription = "Menu") },
             label = { Text("Menu") },
             selected = selectedIndex == 2,
-            onClick = { onClick(2) },
+            onClick = { navigateToMenu() },
             alwaysShowLabel = false,
             selectedContentColor = MaterialTheme.colors.secondary,
             unselectedContentColor = unselectedColor

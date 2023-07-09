@@ -2,15 +2,27 @@ package com.myanmarlabournews.blog.ui
 
 import androidx.navigation.NavHostController
 
-object BaseDestinations {
-    const val HOME_ROUTE = "home"
-    const val SEARCH_ROUTE = "search"
-    const val MENU_ROUTE = "menu"
+sealed class AppDestination(val route: String) {
+
+    object Home : AppDestination("home")
+
+    object Search : AppDestination("search")
+
+    object Menu : AppDestination("menu")
+
+    object About : AppDestination("about")
+
+    object PostsByType : AppDestination("postsByType/{type}")
+
+    object PostsByTag : AppDestination("postsByTag/{slug}")
+
+    object Post : AppDestination("posts/{slug}")
+
 }
 
-class BaseNavigationActions(navController: NavHostController) {
+class AppNavigationActions(navController: NavHostController) {
     val navigateToHome: () -> Unit = {
-        navController.navigate(BaseDestinations.HOME_ROUTE) {
+        navController.navigate(AppDestination.Home.route) {
             popUpTo(navController.graph.startDestinationId) {
                 saveState = true
             }
@@ -20,7 +32,7 @@ class BaseNavigationActions(navController: NavHostController) {
     }
 
     val navigateToSearch: () -> Unit = {
-        navController.navigate(BaseDestinations.SEARCH_ROUTE) {
+        navController.navigate(AppDestination.Search.route) {
             popUpTo(navController.graph.startDestinationId) {
                 saveState = true
             }
@@ -30,7 +42,7 @@ class BaseNavigationActions(navController: NavHostController) {
     }
 
     val navigateToMenu: () -> Unit = {
-        navController.navigate(BaseDestinations.MENU_ROUTE) {
+        navController.navigate(AppDestination.Menu.route) {
             popUpTo(navController.graph.startDestinationId) {
                 saveState = true
             }

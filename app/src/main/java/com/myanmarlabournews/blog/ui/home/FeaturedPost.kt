@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +30,7 @@ import com.myanmarlabournews.blog.util.timeAgo
 @Composable
 fun FeaturedPost() {
     Card(
+        shape = RoundedCornerShape(2.dp),
         modifier = Modifier.clickable { }
     ) {
         Column(

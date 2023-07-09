@@ -5,12 +5,12 @@ import androidx.navigation.compose.rememberNavController
 import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 
 @Composable
-fun BaseApp() {
+fun MainApp() {
     MyanmarLabourNewsTheme {
         val navController = rememberNavController()
 
 
-        BaseNavGraph(
+        AppNavGraph(
             navController = navController
         )
     }

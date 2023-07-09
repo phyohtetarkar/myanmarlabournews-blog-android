@@ -8,25 +8,25 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun BaseNavGraph(
+fun AppNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = BaseDestinations.HOME_ROUTE
+    startDestination: String = AppDestination.Home.route
 ) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier
     ) {
-        composable(BaseDestinations.HOME_ROUTE) {
+        composable(AppDestination.Home.route) {
 
         }
 
-        composable(BaseDestinations.SEARCH_ROUTE) {
+        composable(AppDestination.Search.route) {
 
         }
 
-        composable(BaseDestinations.MENU_ROUTE) {
+        composable(AppDestination.Menu.route) {
 
         }
     }

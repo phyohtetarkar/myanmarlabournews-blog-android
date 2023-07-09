@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
@@ -52,6 +53,7 @@ fun MenuScreen() {
         ) {
             LabelText(stringResource(id = R.string.setting))
             Card(
+                shape = RoundedCornerShape(2.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column {
@@ -95,6 +97,7 @@ fun MenuScreen() {
             Spacer(modifier = Modifier.height(16.dp))
             LabelText(stringResource(id = R.string.more))
             Card(
+                shape = RoundedCornerShape(2.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column {
