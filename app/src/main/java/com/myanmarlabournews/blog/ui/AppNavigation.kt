@@ -4,11 +4,13 @@ import androidx.navigation.NavHostController
 
 sealed class AppDestination(val route: String) {
 
-    object Home : AppDestination("home")
+    object Main : AppDestination("main") {
+        object Home : AppDestination("home")
 
-    object Search : AppDestination("search")
+        object Search : AppDestination("search")
 
-    object Menu : AppDestination("menu")
+        object Menu : AppDestination("menu")
+    }
 
     object About : AppDestination("about")
 
@@ -20,9 +22,9 @@ sealed class AppDestination(val route: String) {
 
 }
 
-class AppNavigationActions(navController: NavHostController) {
+class MainNavigationActions(navController: NavHostController) {
     val navigateToHome: () -> Unit = {
-        navController.navigate(AppDestination.Home.route) {
+        navController.navigate(AppDestination.Main.Home.route) {
             popUpTo(navController.graph.startDestinationId) {
                 saveState = true
             }
@@ -32,7 +34,7 @@ class AppNavigationActions(navController: NavHostController) {
     }
 
     val navigateToSearch: () -> Unit = {
-        navController.navigate(AppDestination.Search.route) {
+        navController.navigate(AppDestination.Main.Search.route) {
             popUpTo(navController.graph.startDestinationId) {
                 saveState = true
             }
@@ -42,12 +44,18 @@ class AppNavigationActions(navController: NavHostController) {
     }
 
     val navigateToMenu: () -> Unit = {
-        navController.navigate(AppDestination.Menu.route) {
+        navController.navigate(AppDestination.Main.Menu.route) {
             popUpTo(navController.graph.startDestinationId) {
                 saveState = true
             }
             launchSingleTop = true
             restoreState = true
         }
+    }
+}
+
+class AppNavigationActions(navController: NavHostController) {
+    val navigateToAbout: () -> Unit = {
+        navController.navigate(AppDestination.About.route)
     }
 }

@@ -11,4 +11,13 @@ data class Tag(
     @JsonProperty("id") val id: Int,
     @JsonProperty("name") val name: String,
     @JsonProperty("slug") val slug: String? = "undefined"
-) : Serializable
+) : Serializable {
+    companion object {
+        fun fake(): Tag {
+            return Tag(
+                id = 1,
+                name = "Tag",
+            )
+        }
+    }
+}

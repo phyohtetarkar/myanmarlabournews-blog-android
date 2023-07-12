@@ -1,4 +1,4 @@
-package com.myanmarlabournews.blog.ui.home
+package com.myanmarlabournews.blog.ui.post
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
@@ -25,70 +25,86 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.myanmarlabournews.blog.R
+import com.myanmarlabournews.blog.model.Post
 import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 import com.myanmarlabournews.blog.util.timeAgo
 
 @Composable
-fun RecentPost() {
+fun PostListItem(
+    post: Post,
+    onClick: ((post: Post) -> Unit)? = null
+) {
     Card(
         shape = RoundedCornerShape(2.dp),
-        modifier = Modifier.clickable { },
     ) {
         Row(
             verticalAlignment = Alignment.Top,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .clickable {
+                    onClick?.invoke(post)
+                }
+                .padding(16.dp),
         ) {
             Column(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = "Article",
+                    text = post.type.name,
                     color = Color.Gray,
                     fontWeight = FontWeight.Medium,
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    "Post title",
-                    fontSize = 18.sp,
+                    text = post.title,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = 1688614712249.timeAgo(),
+                    text = post.publishedAt?.timeAgo() ?: post.createdAt.timeAgo(),
                     color = Color.Gray,
                     fontSize = 12.sp
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
-            Image(
-                painter = painterResource(id = R.drawable.cover_sample),
-                contentDescription = "Cover",
-                modifier = Modifier
-                    .height(80.dp)
-                    .aspectRatio(4f / 3f)
-                    .clip(RoundedCornerShape(4.dp)),
-                contentScale = ContentScale.Crop
-            )
+            if (!post.cover.isNullOrEmpty()) {
+                AsyncImage(
+                    model = post.cover,
+                    contentDescription = "Cove",
+                    modifier = Modifier
+                        .height(80.dp)
+                        .aspectRatio(4f / 3f)
+                        .clip(RoundedCornerShape(4.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Image(
+                    painter = painterResource(id = R.drawable.cover_sample),
+                    contentDescription = "Cover",
+                    modifier = Modifier
+                        .height(80.dp)
+                        .aspectRatio(4f / 3f)
+                        .clip(RoundedCornerShape(4.dp)),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
         }
     }
 }
 
 @Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun RecentPostPreview() {
     MyanmarLabourNewsTheme {
-        RecentPost()
-    }
-}
-
-@Preview(uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun RecentPostPreviewNight() {
-    MyanmarLabourNewsTheme {
-        RecentPost()
+        PostListItem(
+            post = Post.fake()
+        )
     }
 }

@@ -5,16 +5,23 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -30,27 +37,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.myanmarlabournews.blog.R
-import com.myanmarlabournews.blog.ui.BaseAppBar
-import com.myanmarlabournews.blog.ui.BottomNavigationBar
 import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 
 @Composable
-fun MenuScreen() {
+fun MenuScreen(
+    toggleDarkMode: (checked: Boolean) -> Unit,
+    navigateToAbout: () -> Unit,
+) {
     val context = LocalContext.current
-
-    Scaffold(
-        topBar = {
-            BaseAppBar()
-        },
-        bottomBar = { BottomNavigationBar(selectedIndex = 2) },
-
-        ) {
+    Box(
+        contentAlignment = Alignment.TopCenter,
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         Column(
             modifier = Modifier
-                .padding(it)
-                .padding(16.dp)
-                .fillMaxWidth(),
+                .padding(horizontal = 10.dp)
+                .wrapContentWidth()
+                .widthIn(max = 600.dp)
+                .verticalScroll(rememberScrollState()),
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
             LabelText(stringResource(id = R.string.setting))
             Card(
                 shape = RoundedCornerShape(2.dp),
@@ -68,14 +75,15 @@ fun MenuScreen() {
                             modifier = Modifier.weight(1f)
                         )
                         Switch(
-                            checked = false,
-                            onCheckedChange = {
+                            checked = !MaterialTheme.colors.isLight,
+                            onCheckedChange = { checked ->
                                 //context.findActivity()?.recreate()
+                                toggleDarkMode(checked)
                             },
                             modifier = Modifier.padding(0.dp),
                         )
                     }
-                    Divider()
+                    Divider(thickness = 0.5.dp)
                     Row(
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
@@ -121,7 +129,7 @@ fun MenuScreen() {
                             contentDescription = "Messenger"
                         )
                     }
-                    Divider()
+                    Divider(thickness = 0.5.dp)
                     Row(
                         modifier = Modifier
                             .clickable {
@@ -135,7 +143,12 @@ fun MenuScreen() {
                                     type = "text/plain"
                                 }
 
-                                context.startActivity(Intent.createChooser(intent, "Send Email"))
+                                context.startActivity(
+                                    Intent.createChooser(
+                                        intent,
+                                        "Send Email"
+                                    )
+                                )
                             }
                             .height(56.dp)
                             .padding(horizontal = 16.dp),
@@ -152,7 +165,7 @@ fun MenuScreen() {
                             textAlign = TextAlign.End
                         )
                     }
-                    Divider()
+                    Divider(thickness = 0.5.dp)
                     Row(
                         modifier = Modifier
                             .clickable {
@@ -177,18 +190,24 @@ fun MenuScreen() {
                             modifier = Modifier.weight(1f)
                         )
                     }
-                    Divider()
+                    Divider(thickness = 0.5.dp)
                     Row(
                         modifier = Modifier
-                            .clickable { }
+                            .clickable(
+                                onClick = navigateToAbout
+                            )
                             .height(56.dp)
                             .padding(horizontal = 16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(stringResource(id = R.string.about), modifier = Modifier.weight(1f))
+                        Text(
+                            stringResource(id = R.string.about),
+                            modifier = Modifier.weight(1f)
+                        )
                     }
                 }
             }
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }
@@ -203,17 +222,15 @@ fun LabelText(text: String) {
 }
 
 @Preview
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun MenuScreenPreview() {
     MyanmarLabourNewsTheme {
-        MenuScreen()
-    }
-}
-
-@Preview(uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun MenuScreenPreviewDark() {
-    MyanmarLabourNewsTheme {
-        MenuScreen()
+        Surface {
+            MenuScreen(
+                toggleDarkMode = {},
+                navigateToAbout = {}
+            )
+        }
     }
 }
