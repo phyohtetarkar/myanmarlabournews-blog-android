@@ -4,6 +4,8 @@ import androidx.navigation.NavHostController
 
 sealed class AppDestination(val route: String) {
 
+    object Splash : AppDestination("splash")
+
     object Main : AppDestination("main") {
         object Home : AppDestination("home")
 
@@ -55,6 +57,15 @@ class MainNavigationActions(navController: NavHostController) {
 }
 
 class AppNavigationActions(navController: NavHostController) {
+
+    val navigateToMain: () -> Unit = {
+        navController.navigate(AppDestination.Main.route) {
+            popUpTo(AppDestination.Splash.route) {
+                inclusive = true
+            }
+        }
+    }
+
     val navigateToAbout: () -> Unit = {
         navController.navigate(AppDestination.About.route)
     }

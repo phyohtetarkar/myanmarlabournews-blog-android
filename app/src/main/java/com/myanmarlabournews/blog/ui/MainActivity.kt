@@ -32,6 +32,11 @@ class MainActivity : ComponentActivity() {
 
         mainViewModel.setDarkMode(darkMode)
 
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            val device = OneSignal.getDeviceState()
+//            Log.d("user_id", device?.userId ?: "none")
+//        }, 10000)
+
         setContent {
             Surface(
                 modifier = Modifier.fillMaxSize(),

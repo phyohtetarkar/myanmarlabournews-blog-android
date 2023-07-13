@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.myanmarlabournews.blog.ServiceLocator
 import com.myanmarlabournews.blog.model.Post
 import com.myanmarlabournews.blog.ui.about.AboutScreen
+import com.myanmarlabournews.blog.ui.splash.SplashScreen
 
 @Composable
 fun AppNavGraph(
@@ -26,7 +27,7 @@ fun AppNavGraph(
     locale: Post.Lang = Post.Lang.MM,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = AppDestination.Main.route
+    startDestination: String = AppDestination.Splash.route
 ) {
     var selectedItemIndex by remember { mutableStateOf(0) }
 
@@ -35,6 +36,14 @@ fun AppNavGraph(
         startDestination = startDestination,
         modifier = modifier
     ) {
+
+        composable(AppDestination.Splash.route) {
+            SplashScreen(
+                onTimeout = {
+                    navigationActions.navigateToMain()
+                }
+            )
+        }
 
         composable(AppDestination.Main.route) {
             MainRoute(

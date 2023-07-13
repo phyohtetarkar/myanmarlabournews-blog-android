@@ -14,7 +14,7 @@
     <string name="contact_us">Contact us</string>
     <string name="setting">Setting</string>
     <string name="more">More</string>
-    <string name="version_text">Version %s</string>
+    <string name="version_text">Version</string>
     <string name="about_description">မြန်မာနိုင်ငံက အလုပ်သမားထုရင်ဆိုင်ကြုံတွေ့နေရသည့် အခက်အခဲများ၊အလုပ်သမားတို့၏အသံများ၊ ဥပဒေရေးရာ သိမှတ်ဖွယ်ရာများကို Myanmar Labour News သတင်းဌာနကနေအချိန်နှင့်တစ်ပြေးညီ တင်ဆက်ပေးသွားမှာဖြစ်ပါတယ်။</string>
     <string name="contact_phone">+95 9 260 036 007</string>
     <string name="contact_mail">myanmarlabournews@gmail.com</string>
@@ -24,4 +24,5 @@
     <string name="recent_posts">Recent posts</string>
     <string name="explore">Explore</string>
     <string name="no_posts_found">No posts found</string>
+    <string name="notifications">Notifications</string>
 </resources>

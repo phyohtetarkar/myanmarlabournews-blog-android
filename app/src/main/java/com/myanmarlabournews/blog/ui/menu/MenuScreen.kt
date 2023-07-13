@@ -3,6 +3,8 @@ package com.myanmarlabournews.blog.ui.menu
 import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -86,18 +88,28 @@ fun MenuScreen(
                     Divider(thickness = 0.5.dp)
                     Row(
                         modifier = Modifier
+                            .clickable {
+                                val intent = Intent()
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                                } else {
+                                    intent.action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                                    intent.putExtra("app_package", context.packageName)
+                                    intent.putExtra("app_uid", context.applicationInfo.uid)
+                                }
+
+                                context.startActivity(intent)
+                            }
                             .padding(horizontal = 16.dp)
                             .height(56.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            stringResource(id = R.string.receive_notification),
+                            stringResource(R.string.notifications),
                             modifier = Modifier.weight(1f)
-                        )
-                        Switch(
-                            checked = true,
-                            onCheckedChange = {},
-                            modifier = Modifier.padding(0.dp),
                         )
                     }
                 }
