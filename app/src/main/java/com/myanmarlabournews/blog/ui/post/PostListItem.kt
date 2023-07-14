@@ -53,14 +53,13 @@ fun PostListItem(
                 Text(
                     text = post.type.name,
                     color = Color.Gray,
-                    fontWeight = FontWeight.Medium,
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = post.title,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -68,7 +67,7 @@ fun PostListItem(
                 Text(
                     text = post.publishedAt?.timeAgo() ?: post.createdAt.timeAgo(),
                     color = Color.Gray,
-                    fontSize = 12.sp
+                    fontSize = 14.sp
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))

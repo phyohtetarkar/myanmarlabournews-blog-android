@@ -67,8 +67,8 @@ fun HomeScreen(
                 .wrapContentWidth()
                 .widthIn(max = 600.dp)
                 .fillMaxHeight()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 10.dp)
-                .verticalScroll(rememberScrollState()),
         ) {
             val size = uiState.posts.size
             val featureCount = if (size == 0) {
@@ -90,7 +90,7 @@ fun HomeScreen(
 //                    }
 //                }
                 FeaturedPostPager(
-                    posts = uiState.posts.subList(0, 3)
+                    posts = uiState.posts.subList(0, 3),
                 )
             } else if (featureCount > 0) {
                 FeaturedPost(post = uiState.posts[0], fillWidth = true)

@@ -21,6 +21,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -74,7 +75,11 @@ fun SearchScreen(
 
         if (uiState.errorMessage != null) {
             LaunchedEffect(snackbarHostState) {
-                snackbarHostState.showSnackbar(uiState.errorMessage)
+                val result = snackbarHostState.showSnackbar(uiState.errorMessage, "Retry")
+
+                if (result == SnackbarResult.ActionPerformed) {
+                    refresh()
+                }
             }
         }
 

@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,10 +28,14 @@ import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FeaturedPostPager(
-    posts: List<Post>
+    posts: List<Post>,
 ) {
     val pageCount = posts.size
     val pagerState = rememberPagerState(initialPage = 0)
+
+    LaunchedEffect(key1 = posts) {
+        pagerState.scrollToPage(0)
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,7 +44,7 @@ fun FeaturedPostPager(
         HorizontalPager(
             pageCount = pageCount,
             state = pagerState,
-            pageSpacing = 10.dp
+            pageSpacing = 10.dp,
         ) { page ->
             FeaturedPost(
                 post = posts[page],

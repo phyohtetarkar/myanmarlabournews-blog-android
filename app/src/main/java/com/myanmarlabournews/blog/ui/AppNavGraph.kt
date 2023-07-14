@@ -3,6 +3,9 @@ package com.myanmarlabournews.blog.ui
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -66,7 +69,6 @@ fun AppNavGraph(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SlideAnimation(
     content: @Composable () -> Unit
@@ -83,6 +85,26 @@ fun SlideAnimation(
         exit = slideOutHorizontally(
             targetOffsetX = { fw -> fw }
         )
+    ) {
+        content()
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun FadeThroughAnimation(
+    content: @Composable () -> Unit
+) {
+    val visibleState = MutableTransitionState(false).apply {
+        // Start the animation immediately.
+        targetState = true
+    }
+    AnimatedVisibility(
+        visibleState = visibleState,
+        enter = fadeIn() + scaleIn(
+            initialScale = 0.95f,
+        ),
+        exit = fadeOut()
     ) {
         content()
     }
