@@ -22,6 +22,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -81,19 +82,22 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(10.dp))
 
             if (featureCount == 3) {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    items(featureCount) { index ->
-                        FeaturedPost(post = uiState.posts[index])
-                    }
-                }
+//                LazyRow(
+//                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+//                ) {
+//                    items(featureCount) { index ->
+//                        FeaturedPost(post = uiState.posts[index])
+//                    }
+//                }
+                FeaturedPostPager(
+                    posts = uiState.posts.subList(0, 3)
+                )
             } else if (featureCount > 0) {
                 FeaturedPost(post = uiState.posts[0], fillWidth = true)
             }
 
             if (featureCount > 0) {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
             Text(
@@ -146,7 +150,11 @@ fun HomeScreen(
 
             if (uiState.errorMessage != null) {
                 LaunchedEffect(snackbarHostState) {
-                    snackbarHostState.showSnackbar(uiState.errorMessage)
+                    val result = snackbarHostState.showSnackbar(uiState.errorMessage, "Retry")
+
+                    if (result == SnackbarResult.ActionPerformed) {
+                        refresh()
+                    }
                 }
             }
         }
@@ -195,7 +203,7 @@ fun HomeScreenPreview() {
             HomeScreen(
                 uiState = HomeUiState(
                     isLoading = false,
-                    posts = listOf(Post.fake(), Post.fake()),
+                    posts = listOf(Post.fake(), Post.fake(), Post.fake(), Post.fake()),
                     errorMessage = null
                 ),
                 refresh = {},

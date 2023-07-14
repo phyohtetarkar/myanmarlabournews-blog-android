@@ -34,7 +34,7 @@ fun SplashScreen(
     val currentOnTimeout by rememberUpdatedState(onTimeout)
 
     LaunchedEffect(true) {
-        delay(3000)
+        delay(2000)
         currentOnTimeout()
     }
 
