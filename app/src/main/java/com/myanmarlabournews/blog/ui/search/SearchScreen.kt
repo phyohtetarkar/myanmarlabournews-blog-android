@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
@@ -37,7 +36,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.myanmarlabournews.blog.model.Tag
-import com.myanmarlabournews.blog.ui.theme.DarkCustomPrimary
 import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
@@ -88,32 +86,6 @@ fun SearchScreen(
             state = state,
             contentColor = MaterialTheme.colors.secondary,
             modifier = Modifier.align(Alignment.TopCenter)
-        )
-    }
-}
-
-@Composable
-fun TagChip(
-    tag: Tag,
-    onClick: () -> Unit = {}
-) {
-    val bgColor = if (MaterialTheme.colors.isLight) {
-        Color.LightGray
-    } else {
-        DarkCustomPrimary
-    }
-    Card(
-        shape = CircleShape,
-        elevation = 0.dp,
-        modifier = Modifier
-            .padding(bottom = 10.dp)
-    ) {
-        Text(
-            text = tag.name,
-            modifier = Modifier
-                .background(bgColor)
-                .clickable(onClick = onClick)
-                .padding(horizontal = 14.dp, vertical = 8.dp)
         )
     }
 }

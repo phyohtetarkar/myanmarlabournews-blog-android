@@ -55,7 +55,7 @@ data class Post(
                     image = null,
                     role = "Editor"
                 ),
-                tags = listOf()
+                tags = listOf(Tag.fake(), Tag.fake())
             )
         }
     }
