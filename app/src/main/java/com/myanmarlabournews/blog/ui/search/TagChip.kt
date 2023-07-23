@@ -19,7 +19,8 @@ import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 @Composable
 fun TagChip(
     tag: Tag,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     val bgColor = if (MaterialTheme.colors.isLight) {
         Color.LightGray
@@ -29,8 +30,7 @@ fun TagChip(
     Card(
         shape = CircleShape,
         elevation = 0.dp,
-        modifier = Modifier
-            .padding(bottom = 10.dp)
+        modifier = modifier
     ) {
         Text(
             text = tag.name,

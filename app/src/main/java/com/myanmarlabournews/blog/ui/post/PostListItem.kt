@@ -83,7 +83,7 @@ fun PostListItem(
                 )
             } else {
                 Image(
-                    painter = painterResource(id = R.drawable.cover_sample),
+                    painter = painterResource(id = R.drawable.placeholder),
                     contentDescription = "Cover",
                     modifier = Modifier
                         .height(80.dp)

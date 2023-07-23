@@ -73,7 +73,7 @@ fun FeaturedPost(
                 )
             } else {
                 Image(
-                    painter = painterResource(id = R.drawable.cover_sample),
+                    painter = painterResource(id = R.drawable.placeholder),
                     contentDescription = "Cover",
                     contentScale = ContentScale.Crop,
                     modifier = imageModifier

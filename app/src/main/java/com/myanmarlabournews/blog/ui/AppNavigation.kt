@@ -69,4 +69,13 @@ class AppNavigationActions(navController: NavHostController) {
     val navigateToAbout: () -> Unit = {
         navController.navigate(AppDestination.About.route)
     }
+
+    val navigateToPost: (String) -> Unit = { slug ->
+        navController.navigate("posts/${slug}")
+    }
+
+    val navigateUp: () -> Unit = {
+        navController.navigateUp()
+    }
+
 }

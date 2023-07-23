@@ -29,6 +29,7 @@ import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 @Composable
 fun FeaturedPostPager(
     posts: List<Post>,
+    navigateToPost: (Post) -> Unit,
 ) {
     val pageCount = posts.size
     val pagerState = rememberPagerState(initialPage = 0)
@@ -48,7 +49,8 @@ fun FeaturedPostPager(
         ) { page ->
             FeaturedPost(
                 post = posts[page],
-                fillWidth = true
+                fillWidth = true,
+                onClick = navigateToPost
             )
         }
         Row {
@@ -79,7 +81,8 @@ fun FeaturedPostPagerPreview() {
     MyanmarLabourNewsTheme {
         Surface {
             FeaturedPostPager(
-                posts = listOf(Post.fake(), Post.fake(), Post.fake())
+                posts = listOf(Post.fake(), Post.fake(), Post.fake()),
+                navigateToPost = {}
             )
         }
 

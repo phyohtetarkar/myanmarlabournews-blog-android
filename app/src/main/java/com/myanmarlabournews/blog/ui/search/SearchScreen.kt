@@ -66,7 +66,11 @@ fun SearchScreen(
             ) {
                 val tags = uiState.tags
                 for (tag in tags) {
-                    TagChip(tag = tag)
+                    TagChip(
+                        tag = tag,
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                    )
                 }
             }
         }

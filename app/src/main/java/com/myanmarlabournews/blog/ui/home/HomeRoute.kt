@@ -32,8 +32,8 @@ fun HomeRoute(
             viewModel.loadPosts(locale)
         },
         snackbarHostState = snackbarHostState,
-        navigateToPost = {
-
+        navigateToPost = { post ->
+            navigationActions.navigateToPost(post.slug)
         },
         navigateToType = {
 

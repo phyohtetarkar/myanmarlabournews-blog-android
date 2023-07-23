@@ -4,8 +4,11 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
@@ -14,6 +17,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -32,6 +36,7 @@ import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 @Composable
 fun PostListScreen(
     posts: List<Post>,
+    title: String,
     refresh: () -> Unit,
     navigateBack: () -> Unit
 ) {
@@ -42,7 +47,9 @@ fun PostListScreen(
             TopAppBar(
                 backgroundColor = MaterialTheme.colors.primary,
                 elevation = 0.dp,
-                title = {},
+                title = {
+                    Text(text = title)
+                },
                 navigationIcon = {
                     IconButton(
                         onClick = navigateBack
@@ -64,8 +71,12 @@ fun PostListScreen(
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
-                contentPadding = PaddingValues(all = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                contentPadding = PaddingValues(all = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .widthIn(max = 600.dp)
+                    .fillMaxHeight()
             ) {
                 items(posts) { item ->
                     PostListItem(post = item)
@@ -94,6 +105,7 @@ fun PostListScreenPreview() {
                 posts = listOf(
                     Post.fake(), Post.fake(), Post.fake(), Post.fake(), Post.fake()
                 ),
+                title = "Posts",
                 refresh = {},
                 navigateBack = {}
             )

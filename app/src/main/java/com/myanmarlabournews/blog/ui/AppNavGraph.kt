@@ -14,13 +14,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.myanmarlabournews.blog.ServiceLocator
 import com.myanmarlabournews.blog.model.Post
 import com.myanmarlabournews.blog.ui.about.AboutScreen
+import com.myanmarlabournews.blog.ui.post.PostDetailRoute
+import com.myanmarlabournews.blog.ui.post.PostDetailViewModel
 import com.myanmarlabournews.blog.ui.splash.SplashScreen
 
 @Composable
@@ -33,6 +38,8 @@ fun AppNavGraph(
     startDestination: String = AppDestination.Splash.route
 ) {
     var selectedItemIndex by remember { mutableStateOf(0) }
+
+    val uri = "https://www.myanmarlabournews.com"
 
     NavHost(
         navController = navController,
@@ -66,6 +73,42 @@ fun AppNavGraph(
                 }
             )
         }
+
+        composable(
+            AppDestination.Post.route,
+            arguments = listOf(navArgument("slug") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val viewModel = viewModel<PostDetailViewModel>(
+                factory = PostDetailViewModel.provideFactory(
+                    serviceLocator.postRepo,
+                )
+            )
+
+            PostDetailRoute(
+                slug = backStackEntry.arguments?.getString("slug") ?: "",
+                viewModel = viewModel,
+                navigationActions = navigationActions
+            )
+        }
+
+//        composable(
+//            AppDestination.Post.route,
+//            deepLinks = listOf(
+//                navDeepLink { uriPattern = "$uri/posts/{slug}" },
+//                navDeepLink { uriPattern = "$uri/en/posts/{slug}" }
+//            )
+//        ) { backStackEntry ->
+//            val viewModel = viewModel<PostDetailViewModel>(
+//                factory = PostDetailViewModel.provideFactory(
+//                    serviceLocator.postRepo,
+//                )
+//            )
+//            PostDetailRoute(
+//                slug = backStackEntry.arguments?.getString("slug") ?: "",
+//                viewModel = viewModel,
+//                navigationActions = navigationActions
+//            )
+//        }
     }
 }
 

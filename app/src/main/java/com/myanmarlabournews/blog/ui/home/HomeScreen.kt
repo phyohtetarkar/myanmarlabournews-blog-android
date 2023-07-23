@@ -91,9 +91,14 @@ fun HomeScreen(
 //                }
                 FeaturedPostPager(
                     posts = uiState.posts.subList(0, 3),
+                    navigateToPost = navigateToPost
                 )
             } else if (featureCount > 0) {
-                FeaturedPost(post = uiState.posts[0], fillWidth = true)
+                FeaturedPost(
+                    post = uiState.posts[0],
+                    fillWidth = true,
+                    onClick = navigateToPost
+                )
             }
 
             if (featureCount > 0) {
@@ -133,7 +138,10 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     for (i in featureCount until size) {
-                        PostListItem(post = uiState.posts[i])
+                        PostListItem(
+                            post = uiState.posts[i],
+                            onClick = navigateToPost
+                        )
                     }
                     Spacer(modifier = Modifier.height(5.dp))
                 }
