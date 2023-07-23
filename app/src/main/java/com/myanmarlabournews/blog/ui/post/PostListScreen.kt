@@ -5,11 +5,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -24,32 +31,54 @@ import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PostListScreen(
+    posts: List<Post>,
     refresh: () -> Unit,
-    posts: List<Post>
+    navigateBack: () -> Unit
 ) {
     val state = rememberPullRefreshState(refreshing = false, onRefresh = refresh)
 
-    Box(
-        modifier = Modifier
-            .pullRefresh(state)
-            .fillMaxSize(),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        LazyColumn(
-            contentPadding = PaddingValues(all = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(posts) { item ->
-                PostListItem(post = item)
-            }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                backgroundColor = MaterialTheme.colors.primary,
+                elevation = 0.dp,
+                title = {},
+                navigationIcon = {
+                    IconButton(
+                        onClick = navigateBack
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.ArrowBack,
+                            contentDescription = "Icon"
+                        )
+                    }
+                }
+            )
         }
+    ) {
+        Box(
+            modifier = Modifier
+                .pullRefresh(state)
+                .fillMaxSize()
+                .padding(it),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            LazyColumn(
+                contentPadding = PaddingValues(all = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(posts) { item ->
+                    PostListItem(post = item)
+                }
+            }
 
-        PullRefreshIndicator(
-            refreshing = false,
-            state = state,
-            contentColor = MaterialTheme.colors.secondary,
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
+            PullRefreshIndicator(
+                refreshing = false,
+                state = state,
+                contentColor = MaterialTheme.colors.secondary,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+        }
     }
 }
 
@@ -62,10 +91,11 @@ fun PostListScreenPreview() {
             color = MaterialTheme.colors.background
         ) {
             PostListScreen(
-                refresh = { },
                 posts = listOf(
                     Post.fake(), Post.fake(), Post.fake(), Post.fake(), Post.fake()
-                )
+                ),
+                refresh = {},
+                navigateBack = {}
             )
         }
     }

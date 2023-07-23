@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -32,6 +33,9 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,12 +59,15 @@ import com.myanmarlabournews.blog.ui.search.TagChip
 import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 import com.myanmarlabournews.blog.util.timeAgo
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PostDetailScreen(
     post: Post,
     fillWidth: Boolean = false,
+    refresh: () -> Unit,
     navigateBack: () -> Unit
 ) {
+    val state = rememberPullRefreshState(refreshing = false, onRefresh = refresh)
     val context = LocalContext.current
 
     val modifier = if (fillWidth) {
@@ -99,8 +106,10 @@ fun PostDetailScreen(
     ) {
         Box(
             modifier = Modifier
-                .padding(it)
+                .pullRefresh(state)
                 .fillMaxSize()
+                .padding(it),
+            contentAlignment = Alignment.TopCenter
         ) {
             Column() {
                 ConstraintLayout() {
@@ -214,6 +223,13 @@ fun PostDetailScreen(
                 }
                 Divider(thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
             }
+
+            PullRefreshIndicator(
+                refreshing = false,
+                state = state,
+                contentColor = MaterialTheme.colors.secondary,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }
@@ -227,6 +243,7 @@ fun PostDetailScreenPreview() {
             PostDetailScreen(
                 post = Post.fake(),
                 fillWidth = true,
+                refresh = {},
                 navigateBack = {}
             )
         }
