@@ -69,7 +69,10 @@ fun SearchScreen(
                     TagChip(
                         tag = tag,
                         modifier = Modifier
-                            .padding(bottom = 8.dp)
+                            .padding(bottom = 8.dp),
+                        onClick = {
+                            navigateToTag(tag)
+                        }
                     )
                 }
             }

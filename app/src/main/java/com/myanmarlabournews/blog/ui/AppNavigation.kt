@@ -1,6 +1,9 @@
 package com.myanmarlabournews.blog.ui
 
 import androidx.navigation.NavHostController
+import com.myanmarlabournews.blog.model.Author
+import com.myanmarlabournews.blog.model.Post
+import com.myanmarlabournews.blog.model.Tag
 
 sealed class AppDestination(val route: String) {
 
@@ -18,7 +21,10 @@ sealed class AppDestination(val route: String) {
 
     object PostsByType : AppDestination("postsByType/{type}")
 
-    object PostsByTag : AppDestination("postsByTag/{slug}")
+    object PostsByTag : AppDestination("postsByTag?tagId={tagId}&tagName={tagName}")
+
+    object PostsByAuthor :
+        AppDestination("postsByAuthor?authorId={authorId}&authorName={authorName}")
 
     object Post : AppDestination("posts/{slug}")
 
@@ -72,6 +78,18 @@ class AppNavigationActions(navController: NavHostController) {
 
     val navigateToPost: (String) -> Unit = { slug ->
         navController.navigate("posts/${slug}")
+    }
+
+    val navigateToPostsByType: (Post.Type) -> Unit = { type ->
+        navController.navigate("postsByType/${type.name}")
+    }
+
+    val navigateToPostsByTag: (Tag) -> Unit = { tag ->
+        navController.navigate("postsByTag?tagId=${tag.id}&tagName=${tag.name}")
+    }
+
+    val navigateToPostsByAuthor: (Author) -> Unit = { author ->
+        navController.navigate("postsByAuthor?authorId=${author.id}&authorName=${author.name}")
     }
 
     val navigateUp: () -> Unit = {

@@ -1,8 +1,6 @@
 package com.myanmarlabournews.blog.ui.post
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.webkit.WebChromeClient
-import android.webkit.WebView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -57,12 +54,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
+import com.google.accompanist.web.WebView
+import com.google.accompanist.web.rememberWebViewStateWithHTMLData
 import com.myanmarlabournews.blog.R
 import com.myanmarlabournews.blog.model.Author
 import com.myanmarlabournews.blog.model.Post
+import com.myanmarlabournews.blog.model.Tag
 import com.myanmarlabournews.blog.ui.AppSnackbarHost
 import com.myanmarlabournews.blog.ui.search.TagChip
 import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
@@ -77,6 +76,7 @@ fun PostDetailScreen(
     refresh: () -> Unit,
     navigateBack: () -> Unit,
     navigateToAuthor: (Author) -> Unit,
+    navigateToTag: (Tag) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val state = rememberPullRefreshState(refreshing = uiState.isLoading, onRefresh = refresh)
@@ -118,7 +118,7 @@ fun PostDetailScreen(
                 modifier = Modifier
                     .wrapContentWidth()
                     .widthIn(max = 600.dp)
-                    .fillMaxHeight()
+                    .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
                 if (uiState.post != null) {
@@ -240,7 +240,10 @@ fun PostDetailScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         items(post.tags) { tag ->
-                            TagChip(tag = tag)
+                            TagChip(
+                                tag = tag,
+                                onClick = { navigateToTag(tag) }
+                            )
                         }
                     }
                     Divider(thickness = 1.dp, modifier = Modifier.padding(top = 16.dp))
@@ -276,22 +279,39 @@ fun PostDetailScreen(
 fun ComposeWebView(
     content: String
 ) {
-    AndroidView(
-        factory = {
-            WebView(it).apply {
-                webChromeClient = WebChromeClient()
-                settings.javaScriptEnabled = true
-                isVerticalScrollBarEnabled = false
-                isHorizontalScrollBarEnabled = false
-                alpha = 0.99f
-            }
-        },
-        update = {
-            it.loadDataWithBaseURL(null, content, "text/html", "utf-8", null)
+    val state = rememberWebViewStateWithHTMLData(
+        data = content,
+        encoding = "utf-8",
+        mimeType = "text/html"
+    )
+
+    WebView(
+        state,
+        onCreated = {
+            it.settings.javaScriptEnabled = true
+            it.isVerticalScrollBarEnabled = false
+            it.isHorizontalScrollBarEnabled = false
         },
         modifier = Modifier
             .padding(horizontal = 12.dp)
     )
+//    AndroidView(
+//        factory = {
+//            WebView(it).apply {
+//                webChromeClient = WebChromeClient()
+//                settings.javaScriptEnabled = true
+//                isVerticalScrollBarEnabled = false
+//                isHorizontalScrollBarEnabled = false
+//                alpha = 0.5f
+//
+//            }
+//        },
+//        update = {
+//            it.loadDataWithBaseURL(null, content, "text/html", "utf-8", null)
+//        },
+//        modifier = Modifier
+//            .padding(horizontal = 12.dp)
+//    )
 }
 
 @Preview
@@ -305,6 +325,7 @@ fun PostDetailScreenPreview() {
                 refresh = {},
                 navigateBack = {},
                 navigateToAuthor = {},
+                navigateToTag = {},
                 snackbarHostState = SnackbarHostState()
             )
         }

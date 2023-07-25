@@ -26,7 +26,7 @@ fun SearchRoute(
     SearchScreen(
         uiState = state,
         refresh = { viewModel.loadTags() },
-        navigateToTag = { },
+        navigateToTag = { tag -> navigationActions.navigateToPostsByTag(tag) },
         snackbarHostState = snackbarHostState
     )
 }

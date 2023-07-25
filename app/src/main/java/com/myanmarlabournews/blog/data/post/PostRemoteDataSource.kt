@@ -1,9 +1,8 @@
 package com.myanmarlabournews.blog.data.post
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import com.myanmarlabournews.blog.data.Resource
 import com.myanmarlabournews.blog.data.convert
+import com.myanmarlabournews.blog.model.Page
 import com.myanmarlabournews.blog.model.Post
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -16,7 +15,8 @@ class PostRemoteDataSource(
         try {
             emit(postApi.getPostBySlug(slug, lang).convert())
         } catch (e: Exception) {
-            emit(Resource.Error("Connection error."))
+            e.printStackTrace()
+            emit(Resource.Error("Connection error"))
         }
     }
 
@@ -24,7 +24,7 @@ class PostRemoteDataSource(
         try {
             emit(postApi.getRelatedPosts(postId).convert())
         } catch (e: Exception) {
-            emit(Resource.Error("Connection error."))
+            emit(Resource.Error("Connection error"))
         }
     }
 
@@ -32,17 +32,17 @@ class PostRemoteDataSource(
         try {
             emit(postApi.getLatestPosts(lang).convert())
         } catch (e: Exception) {
-            emit(Resource.Error("Connection error."))
+            emit(Resource.Error("Connection error"))
         }
     }
 
-    fun getPostsByType(type: Post.Type, lang: Post.Lang?) = Pager(
-        config = PagingConfig(
-            pageSize = 15
-        ),
-        pagingSourceFactory = {
-            PostsByTypePagingSource(type, lang ?: Post.Lang.MM, postApi)
+    fun getPostsByType(type: Post.Type, page: Int?, lang: Post.Lang?): Flow<Resource<Page<Post>>> =
+        flow {
+            try {
+                emit(postApi.getPosts(type, page, lang).convert())
+            } catch (e: Exception) {
+                emit(Resource.Error("Connection error"))
+            }
         }
-    ).flow
 
 }

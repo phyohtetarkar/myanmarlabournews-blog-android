@@ -6,34 +6,35 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import com.myanmarlabournews.blog.model.Post
 import com.myanmarlabournews.blog.ui.AppNavigationActions
-import kotlinx.coroutines.delay
 
 @Composable
-fun PostDetailRoute(
-    slug: String,
-    viewModel: PostDetailViewModel,
+fun PostsByTypeRoute(
+    type: Post.Type,
+    lang: Post.Lang,
+    viewModel: PostsByTypeViewModel,
     navigationActions: AppNavigationActions,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ) {
+
     val state by viewModel.state.collectAsState()
 
-    val currentOnTimeout by rememberUpdatedState {
-        viewModel.loadPost(slug)
-    }
-
     LaunchedEffect(key1 = true) {
-        delay(800)
-        currentOnTimeout()
+        viewModel.loadPosts(type, page = 0, lang)
     }
 
-    PostDetailScreen(
+    PostListScreen(
         uiState = state,
-        refresh = { viewModel.loadPost(slug) },
+        title = type.name,
+        refresh = {
+            viewModel.loadPosts(type, 0, lang)
+        },
+        paginate = {
+            viewModel.loadPosts(type, state.currentPage + 1, lang, paginate = true)
+        },
         navigateBack = { navigationActions.navigateUp() },
-        navigateToAuthor = {},
-        navigateToTag = { tag -> navigationActions.navigateToPostsByTag(tag) },
+        navigateToPost = { post -> navigationActions.navigateToPost(post.slug) },
         snackbarHostState = snackbarHostState
     )
 
