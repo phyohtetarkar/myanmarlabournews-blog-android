@@ -23,9 +23,23 @@ class MyanmarLabourNewsApplication : Application() {
 
         OneSignal.promptForPushNotifications()
 
-        OneSignal.setNotificationOpenedHandler { result ->
-            val data = result.notification.additionalData
-        }
+//        OneSignal.setNotificationOpenedHandler { result ->
+//            val data = result.notification.additionalData
+//
+//            if (data.has("post_id")) {
+//                val deepLinkIntent = Intent(
+//                    Intent.ACTION_VIEW,
+//                    "https://www.myanmarlabournews.com/posts/${data.getString("post_id")}".toUri(),
+//                    this,
+//                    MainActivity::class.java
+//                )
+//
+//                val deepLinkPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
+//                    addNextIntentWithParentStack(deepLinkIntent)
+//                    getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+//                }
+//            }
+//        }
     }
 
 }

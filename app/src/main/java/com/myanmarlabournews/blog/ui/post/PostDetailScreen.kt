@@ -1,6 +1,9 @@
 package com.myanmarlabournews.blog.ui.post
 
+import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -56,6 +59,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
+import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewStateWithHTMLData
 import com.myanmarlabournews.blog.R
@@ -68,6 +72,7 @@ import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 import com.myanmarlabournews.blog.util.compactFormat
 import com.myanmarlabournews.blog.util.timeAgo
 import com.myanmarlabournews.blog.util.wrapWithHtml
+
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -293,7 +298,17 @@ fun ComposeWebView(
             it.isHorizontalScrollBarEnabled = false
         },
         modifier = Modifier
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = 12.dp),
+        client = object : AccompanistWebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                val url = request?.url ?: return false
+                view?.context?.startActivity(Intent(Intent.ACTION_VIEW, url))
+                return true
+            }
+        }
     )
 //    AndroidView(
 //        factory = {

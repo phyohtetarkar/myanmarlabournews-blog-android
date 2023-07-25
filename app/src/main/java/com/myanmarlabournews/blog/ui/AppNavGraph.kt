@@ -27,6 +27,8 @@ import com.myanmarlabournews.blog.model.Post
 import com.myanmarlabournews.blog.ui.about.AboutScreen
 import com.myanmarlabournews.blog.ui.post.PostDetailRoute
 import com.myanmarlabournews.blog.ui.post.PostDetailViewModel
+import com.myanmarlabournews.blog.ui.post.PostsByAuthorRoute
+import com.myanmarlabournews.blog.ui.post.PostsByAuthorViewModel
 import com.myanmarlabournews.blog.ui.post.PostsByTagRoute
 import com.myanmarlabournews.blog.ui.post.PostsByTagViewModel
 import com.myanmarlabournews.blog.ui.post.PostsByTypeRoute
@@ -37,10 +39,10 @@ import com.myanmarlabournews.blog.ui.splash.SplashScreen
 fun AppNavGraph(
     serviceLocator: ServiceLocator,
     navigationActions: AppNavigationActions,
-    locale: Post.Lang = Post.Lang.MM,
     modifier: Modifier = Modifier,
+    locale: Post.Lang = Post.Lang.MM,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = AppDestination.Splash.route
+    startDestination: String = AppDestination.Main.route
 ) {
     var selectedItemIndex by remember { mutableStateOf(0) }
 
@@ -139,6 +141,31 @@ fun AppNavGraph(
             PostsByTagRoute(
                 tagId = tagId,
                 tagName = tagName,
+                lang = locale,
+                viewModel = viewModel,
+                navigationActions = navigationActions
+            )
+        }
+
+        composable(
+            AppDestination.PostsByAuthor.route,
+            arguments = listOf(
+                navArgument("authorId") { type = NavType.LongType },
+                navArgument("authorName") { type = NavType.StringType }
+            ),
+        ) { backStackEntry ->
+            val viewModel = viewModel<PostsByAuthorViewModel>(
+                factory = PostsByAuthorViewModel.provideFactory(
+                    serviceLocator.authorRepo,
+                )
+            )
+
+            val authorId = backStackEntry.arguments?.getLong("authorId") ?: 0
+            val authorName = backStackEntry.arguments?.getString("authorName") ?: ""
+
+            PostsByAuthorRoute(
+                authorId = authorId,
+                authorName = authorName,
                 lang = locale,
                 viewModel = viewModel,
                 navigationActions = navigationActions

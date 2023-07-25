@@ -4,26 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.myanmarlabournews.blog.data.Resource
-import com.myanmarlabournews.blog.data.post.PostRepo
+import com.myanmarlabournews.blog.data.author.AuthorRepo
 import com.myanmarlabournews.blog.model.Post
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class PostListUiState(
-    val posts: List<Post> = listOf(),
-    val isRefreshing: Boolean = false,
-    val isAppending: Boolean = false,
-    val currentPage: Int = 0,
-    val totalPage: Int = 0,
-    val refreshError: String? = null,
-    val paginateError: String? = null
-)
-
-class PostsByTypeViewModel(
-    private val postRepo: PostRepo,
-) : ViewModel() {
+class PostsByAuthorViewModel(private val authorRepo: AuthorRepo) : ViewModel() {
 
     var launched = false
 
@@ -32,7 +20,7 @@ class PostsByTypeViewModel(
     val state: StateFlow<PostListUiState>
         get() = _state
 
-    fun loadPosts(type: Post.Type, page: Int?, lang: Post.Lang?, paginate: Boolean = false) =
+    fun loadPosts(authorId: Long, page: Int?, lang: Post.Lang?, paginate: Boolean = false) =
         viewModelScope.launch {
             _state.update {
                 it.copy(
@@ -42,7 +30,7 @@ class PostsByTypeViewModel(
                     paginateError = null
                 )
             }
-            postRepo.getPostsByType(type, page, lang).collect { resource ->
+            authorRepo.getPostsByAuthor(authorId, page, lang).collect { resource ->
                 _state.update {
                     when (resource) {
                         is Resource.Success -> if (paginate) {
@@ -81,13 +69,12 @@ class PostsByTypeViewModel(
 
     companion object {
         fun provideFactory(
-            postRepo: PostRepo,
+            authorRepo: AuthorRepo,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return PostsByTypeViewModel(postRepo) as T
+                return PostsByAuthorViewModel(authorRepo) as T
             }
         }
     }
-
 }

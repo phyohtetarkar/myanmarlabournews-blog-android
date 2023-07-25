@@ -32,7 +32,7 @@ fun PostDetailRoute(
         uiState = state,
         refresh = { viewModel.loadPost(slug) },
         navigateBack = { navigationActions.navigateUp() },
-        navigateToAuthor = {},
+        navigateToAuthor = { author -> navigationActions.navigateToPostsByAuthor(author) },
         navigateToTag = { tag -> navigationActions.navigateToPostsByTag(tag) },
         snackbarHostState = snackbarHostState
     )

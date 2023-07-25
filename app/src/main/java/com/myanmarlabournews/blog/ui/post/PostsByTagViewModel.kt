@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 
 class PostsByTagViewModel(private val tagRepo: TagRepo) : ViewModel() {
 
+    var launched = false
+
     private var _state = MutableStateFlow(PostListUiState(isRefreshing = true))
 
     val state: StateFlow<PostListUiState>

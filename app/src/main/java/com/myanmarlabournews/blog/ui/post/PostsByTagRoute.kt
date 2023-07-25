@@ -20,8 +20,11 @@ fun PostsByTagRoute(
 ) {
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(key1 = true) {
-        viewModel.loadPosts(tagId, page = 0, lang)
+    LaunchedEffect(key1 = viewModel.launched) {
+        if (!viewModel.launched) {
+            viewModel.loadPosts(tagId, page = 0, lang)
+            viewModel.launched = true
+        }
     }
 
     PostListScreen(
