@@ -27,6 +27,8 @@ data class PostDetailUiState(
 
 class PostDetailViewModel(private val postRepo: PostRepo) : ViewModel() {
 
+    var launched = false
+
     private var _state = MutableStateFlow(PostDetailUiState.loading())
 
     val state: StateFlow<PostDetailUiState>

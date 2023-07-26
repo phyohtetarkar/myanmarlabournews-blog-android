@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
 //        Handler(Looper.getMainLooper()).postDelayed({
 //            val device = OneSignal.getDeviceState()
-//            Log.d("user_id", device?.userId ?: "none")
+//            Log.d("TAG", device?.userId ?: "none")
 //        }, 10000)
 
         setContent {

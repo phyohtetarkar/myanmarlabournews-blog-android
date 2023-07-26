@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -83,6 +84,7 @@ fun FeaturedPost(
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -90,6 +92,7 @@ fun FeaturedPost(
                 Text(
                     text = post.type.name,
                     color = Color.Gray,
+                    fontWeight = FontWeight.Medium,
                 )
                 Text(
                     text = post.publishedAt?.timeAgo() ?: post.createdAt.timeAgo(),

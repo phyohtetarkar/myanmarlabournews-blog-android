@@ -37,9 +37,9 @@
             </intent-filter>
         </activity>
 
-        <meta-data
-            android:name="com.onesignal.NotificationServiceExtension"
-            android:value="com.myanmarlabournews.blog.util.NotificationServiceExtension" />
+        <!--        <meta-data-->
+        <!--            android:name="com.onesignal.NotificationServiceExtension"-->
+        <!--            android:value="com.myanmarlabournews.blog.util.NotificationServiceExtension" />-->
     </application>
 
 </manifest>
