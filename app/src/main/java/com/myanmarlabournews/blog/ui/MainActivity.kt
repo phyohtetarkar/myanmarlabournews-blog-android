@@ -37,6 +37,12 @@ class MainActivity : ComponentActivity() {
 //            Log.d("TAG", device?.userId ?: "none")
 //        }, 10000)
 
+        var startDestination = AppDestination.Splash.route
+
+        if (intent.data != null) {
+            startDestination = AppDestination.Main.route
+        }
+
         setContent {
             Surface(
                 modifier = Modifier.fillMaxSize(),
@@ -44,7 +50,8 @@ class MainActivity : ComponentActivity() {
             ) {
                 MainApp(
                     serviceLocator = serviceLocator,
-                    mainViewModel = mainViewModel
+                    mainViewModel = mainViewModel,
+                    startDestination = startDestination
                 )
             }
         }

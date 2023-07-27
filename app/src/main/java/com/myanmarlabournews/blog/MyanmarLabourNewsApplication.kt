@@ -40,7 +40,7 @@ class MyanmarLabourNewsApplication : Application() {
 
                 TaskStackBuilder.create(this)
                     .addNextIntentWithParentStack(deepLinkIntent)
-                    .startActivities();
+                    .startActivities()
 
 //                val deepLinkPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
 //                    addNextIntentWithParentStack(deepLinkIntent)
