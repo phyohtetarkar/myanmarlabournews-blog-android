@@ -41,6 +41,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -51,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +63,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import com.google.accompanist.web.AccompanistWebViewClient
 import com.google.accompanist.web.WebView
+import com.google.accompanist.web.WebViewState
 import com.google.accompanist.web.rememberWebViewStateWithHTMLData
 import com.myanmarlabournews.blog.R
 import com.myanmarlabournews.blog.model.Author
@@ -86,6 +89,8 @@ fun PostDetailScreen(
 ) {
     val state = rememberPullRefreshState(refreshing = uiState.isLoading, onRefresh = refresh)
 
+    val context = LocalContext.current
+
     val imageModifier = Modifier
         .fillMaxWidth()
 
@@ -101,8 +106,28 @@ fun PostDetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBack,
-                            contentDescription = "Icon"
+                            contentDescription = "Back Icon"
                         )
+                    }
+                },
+                actions = {
+                    if (!uiState.post?.shareLink.isNullOrEmpty()) {
+                        IconButton(
+                            onClick = {
+                                val sendIntent: Intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, uiState.post?.shareLink)
+                                    type = "text/plain"
+                                }
+                                val shareIntent = Intent.createChooser(sendIntent, "Share with")
+                                context.startActivity(shareIntent)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Share,
+                                contentDescription = "Share Icon"
+                            )
+                        }
                     }
                 }
             )
@@ -254,10 +279,13 @@ fun PostDetailScreen(
                     Divider(thickness = 1.dp, modifier = Modifier.padding(top = 16.dp))
 
                     ComposeWebView(
-                        content = post.body?.wrapWithHtml(MaterialTheme.colors.isLight) ?: ""
+                        state = rememberWebViewStateWithHTMLData(
+                            data = post.body?.wrapWithHtml(MaterialTheme.colors.isLight) ?: "",
+                            encoding = "utf-8",
+                            mimeType = "text/html"
+                        )
                     )
                 }
-
 
                 if (uiState.errorMessage != null) {
                     LaunchedEffect(snackbarHostState) {
@@ -282,14 +310,8 @@ fun PostDetailScreen(
 
 @Composable
 fun ComposeWebView(
-    content: String
+    state: WebViewState
 ) {
-    val state = rememberWebViewStateWithHTMLData(
-        data = content,
-        encoding = "utf-8",
-        mimeType = "text/html"
-    )
-
     WebView(
         state,
         onCreated = {
