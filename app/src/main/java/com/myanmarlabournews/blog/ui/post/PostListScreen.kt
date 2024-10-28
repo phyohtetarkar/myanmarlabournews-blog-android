@@ -212,7 +212,7 @@ fun PostListScreenPreview() {
             PostListScreen(
                 uiState = PostListUiState(
                     posts = listOf(
-                        Post.fake(), Post.fake(), Post.fake(), Post.fake(), Post.fake()
+                        Post.fake(1), Post.fake(2), Post.fake(3), Post.fake(4), Post.fake(5)
                     )
                 ),
                 title = "Posts",

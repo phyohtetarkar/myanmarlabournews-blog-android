@@ -32,7 +32,7 @@ fun FeaturedPostPager(
     navigateToPost: (Post) -> Unit,
 ) {
     val pageCount = posts.size
-    val pagerState = rememberPagerState(initialPage = 0)
+    val pagerState = rememberPagerState(initialPage = 0) { 3 }
 
     LaunchedEffect(key1 = posts) {
         pagerState.scrollToPage(0)
@@ -43,7 +43,6 @@ fun FeaturedPostPager(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         HorizontalPager(
-            pageCount = pageCount,
             state = pagerState,
             pageSpacing = 10.dp,
         ) { page ->

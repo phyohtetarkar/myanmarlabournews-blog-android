@@ -1,8 +1,12 @@
 package com.myanmarlabournews.blog.ui.post
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,8 +43,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -62,13 +66,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
-import com.google.accompanist.web.AccompanistWebViewClient
-import com.google.accompanist.web.WebView
-import com.google.accompanist.web.WebViewState
-import com.google.accompanist.web.rememberWebViewStateWithHTMLData
 import com.myanmarlabournews.blog.R
 import com.myanmarlabournews.blog.model.Author
 import com.myanmarlabournews.blog.model.Post
+import com.myanmarlabournews.blog.model.Tag
 import com.myanmarlabournews.blog.ui.AppSnackbarHost
 import com.myanmarlabournews.blog.ui.search.TagChip
 import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
@@ -104,7 +105,7 @@ fun PostDetailScreen(
                         onClick = navigateBack
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = "Back Icon"
                         )
                     }
@@ -113,7 +114,7 @@ fun PostDetailScreen(
                     if (!uiState.post?.shareLink.isNullOrEmpty()) {
                         IconButton(
                             onClick = {
-                                val sendIntent: Intent = Intent().apply {
+                                val sendIntent = Intent().apply {
                                     action = Intent.ACTION_SEND
                                     putExtra(Intent.EXTRA_TEXT, uiState.post?.shareLink)
                                     type = "text/plain"
@@ -282,13 +283,6 @@ fun PostDetailScreen(
                             content = post.body.wrapWithHtml(MaterialTheme.colors.isLight)
                         )
                     }
-                    ComposeWebView(
-                        state = rememberWebViewStateWithHTMLData(
-                            data = post.body?.wrapWithHtml(MaterialTheme.colors.isLight) ?: "",
-                            encoding = "utf-8",
-                            mimeType = "text/html"
-                        )
-                    )
                 }
 
 
@@ -316,44 +310,53 @@ fun PostDetailScreen(
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun ComposeWebView(
-    state: WebViewState
+    content: String
 ) {
-    WebView(
-        state,
-        onCreated = {
-            it.settings.javaScriptEnabled = true
-            it.isVerticalScrollBarEnabled = false
-            it.isHorizontalScrollBarEnabled = false
+    AndroidView(
+        factory = {
+            WebView(it).apply {
+                webChromeClient = WebChromeClient()
+                settings.javaScriptEnabled = true
+                isVerticalScrollBarEnabled = false
+                isHorizontalScrollBarEnabled = false
+                alpha = 0.5f
+                webViewClient = object : WebViewClient() {
+                    override fun shouldOverrideUrlLoading(
+                        view: WebView?,
+                        request: WebResourceRequest?
+                    ): Boolean {
+                        val url = request?.url ?: return false
+                        view?.context?.startActivity(Intent(Intent.ACTION_VIEW, url))
+                        return true
+                    }
+                }
+            }
+        },
+        update = {
+            it.loadDataWithBaseURL(null, content, "text/html", "utf-8", null)
         },
         modifier = Modifier
-            .padding(horizontal = 12.dp),
-        client = object : AccompanistWebViewClient() {
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?
-            ): Boolean {
-                val url = request?.url ?: return false
-                view?.context?.startActivity(Intent(Intent.ACTION_VIEW, url))
-                return true
-            }
-        }
+            .padding(horizontal = 12.dp)
     )
-//    AndroidView(
-//        factory = {
-//            WebView(it).apply {
-//                webChromeClient = WebChromeClient()
-//                settings.javaScriptEnabled = true
-//                isVerticalScrollBarEnabled = false
-//                isHorizontalScrollBarEnabled = false
-//                alpha = 0.5f
-//
-//            }
-//        },
-//        update = {
-//            it.loadDataWithBaseURL(null, content, "text/html", "utf-8", null)
+//    WebView(
+//        state,
+//        onCreated = {
+//            it.settings.javaScriptEnabled = true
+//            it.isVerticalScrollBarEnabled = false
+//            it.isHorizontalScrollBarEnabled = false
 //        },
 //        modifier = Modifier
-//            .padding(horizontal = 12.dp)
+//            .padding(horizontal = 12.dp),
+//        client = object : AccompanistWebViewClient() {
+//            override fun shouldOverrideUrlLoading(
+//                view: WebView?,
+//                request: WebResourceRequest?
+//            ): Boolean {
+//                val url = request?.url ?: return false
+//                view?.context?.startActivity(Intent(Intent.ACTION_VIEW, url))
+//                return true
+//            }
+//        }
 //    )
 }
 
