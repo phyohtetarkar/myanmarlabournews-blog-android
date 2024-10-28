@@ -48,7 +48,7 @@ data class Post(
                 publishedAt = 1688614712249,
                 body = null,
                 cover = null,
-                shareLink = null,
+                shareLink = "hello",
                 author = Author(
                     id = 1,
                     name = "Author",

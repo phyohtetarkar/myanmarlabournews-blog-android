@@ -1,10 +1,7 @@
 package com.myanmarlabournews.blog.data.tag
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import com.myanmarlabournews.blog.data.Resource
 import com.myanmarlabournews.blog.data.convert
-import com.myanmarlabournews.blog.data.post.PostsByTagPagingSource
 import com.myanmarlabournews.blog.model.Post
 import com.myanmarlabournews.blog.model.Tag
 import kotlinx.coroutines.flow.Flow
@@ -31,13 +28,12 @@ class TagRemoteDataSource(
         }
     }
 
-    fun getPostsByTag(tagInt: Int, lang: Post.Lang?) = Pager(
-        config = PagingConfig(
-            pageSize = 15
-        ),
-        pagingSourceFactory = {
-            PostsByTagPagingSource(tagInt, lang ?: Post.Lang.MM, tagApi)
+    fun getPostsByTag(tagId: Int, page: Int?, lang: Post.Lang?) = flow {
+        try {
+            emit(tagApi.getPostsByTag(tagId, page, lang).convert())
+        } catch (e: Exception) {
+            emit(Resource.Error("Connection error."))
         }
-    ).flow
+    }
 
 }

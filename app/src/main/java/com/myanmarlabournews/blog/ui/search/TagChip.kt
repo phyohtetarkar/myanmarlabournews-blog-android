@@ -19,8 +19,8 @@ import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 @Composable
 fun TagChip(
     tag: Tag,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     val bgColor = if (MaterialTheme.colors.isLight) {
         Color.LightGray

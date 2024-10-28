@@ -1,8 +1,7 @@
 package com.myanmarlabournews.blog.ui.post
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,6 +41,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -52,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +62,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
+import com.google.accompanist.web.AccompanistWebViewClient
+import com.google.accompanist.web.WebView
+import com.google.accompanist.web.WebViewState
+import com.google.accompanist.web.rememberWebViewStateWithHTMLData
 import com.myanmarlabournews.blog.R
 import com.myanmarlabournews.blog.model.Author
 import com.myanmarlabournews.blog.model.Post
@@ -78,9 +83,12 @@ fun PostDetailScreen(
     refresh: () -> Unit,
     navigateBack: () -> Unit,
     navigateToAuthor: (Author) -> Unit,
+    navigateToTag: (Tag) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
     val state = rememberPullRefreshState(refreshing = uiState.isLoading, onRefresh = refresh)
+
+    val context = LocalContext.current
 
     val imageModifier = Modifier
         .fillMaxWidth()
@@ -97,8 +105,28 @@ fun PostDetailScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.ArrowBack,
-                            contentDescription = "Icon"
+                            contentDescription = "Back Icon"
                         )
+                    }
+                },
+                actions = {
+                    if (!uiState.post?.shareLink.isNullOrEmpty()) {
+                        IconButton(
+                            onClick = {
+                                val sendIntent: Intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, uiState.post?.shareLink)
+                                    type = "text/plain"
+                                }
+                                val shareIntent = Intent.createChooser(sendIntent, "Share with")
+                                context.startActivity(shareIntent)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Share,
+                                contentDescription = "Share Icon"
+                            )
+                        }
                     }
                 }
             )
@@ -241,7 +269,10 @@ fun PostDetailScreen(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         items(post.tags) { tag ->
-                            TagChip(tag = tag)
+                            TagChip(
+                                tag = tag,
+                                onClick = { navigateToTag(tag) }
+                            )
                         }
                     }
                     Divider(thickness = 1.dp, modifier = Modifier.padding(top = 16.dp))
@@ -251,7 +282,15 @@ fun PostDetailScreen(
                             content = post.body.wrapWithHtml(MaterialTheme.colors.isLight)
                         )
                     }
+                    ComposeWebView(
+                        state = rememberWebViewStateWithHTMLData(
+                            data = post.body?.wrapWithHtml(MaterialTheme.colors.isLight) ?: "",
+                            encoding = "utf-8",
+                            mimeType = "text/html"
+                        )
+                    )
                 }
+
 
                 if (uiState.errorMessage != null) {
                     LaunchedEffect(snackbarHostState) {
@@ -277,24 +316,45 @@ fun PostDetailScreen(
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun ComposeWebView(
-    content: String
+    state: WebViewState
 ) {
-    AndroidView(
-        factory = {
-            WebView(it).apply {
-                webChromeClient = WebChromeClient()
-                settings.javaScriptEnabled = true
-                isVerticalScrollBarEnabled = false
-                isHorizontalScrollBarEnabled = false
-                alpha = 0.99f
-            }
-        },
-        update = {
-            it.loadDataWithBaseURL(null, content, "text/html", "utf-8", null)
+    WebView(
+        state,
+        onCreated = {
+            it.settings.javaScriptEnabled = true
+            it.isVerticalScrollBarEnabled = false
+            it.isHorizontalScrollBarEnabled = false
         },
         modifier = Modifier
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = 12.dp),
+        client = object : AccompanistWebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                val url = request?.url ?: return false
+                view?.context?.startActivity(Intent(Intent.ACTION_VIEW, url))
+                return true
+            }
+        }
     )
+//    AndroidView(
+//        factory = {
+//            WebView(it).apply {
+//                webChromeClient = WebChromeClient()
+//                settings.javaScriptEnabled = true
+//                isVerticalScrollBarEnabled = false
+//                isHorizontalScrollBarEnabled = false
+//                alpha = 0.5f
+//
+//            }
+//        },
+//        update = {
+//            it.loadDataWithBaseURL(null, content, "text/html", "utf-8", null)
+//        },
+//        modifier = Modifier
+//            .padding(horizontal = 12.dp)
+//    )
 }
 
 @Preview
@@ -308,6 +368,7 @@ fun PostDetailScreenPreview() {
                 refresh = {},
                 navigateBack = {},
                 navigateToAuthor = {},
+                navigateToTag = {},
                 snackbarHostState = SnackbarHostState()
             )
         }

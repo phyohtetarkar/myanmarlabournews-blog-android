@@ -10,20 +10,26 @@ sealed class Resource<T> {
 
 fun <T> Response<T>.convert(): Resource<T> {
     return when {
-        isSuccessful -> Resource.Success(body()!!)
-        code() == 404 -> Resource.Error("Not found.")
-        code() == 400 -> Resource.Error("Something went wrong. Please try again.")
-        code() == 500 -> Resource.Error("Server error.")
-        else -> Resource.Error("Something went wrong. Please try again.")
+        isSuccessful -> raw().let { raw ->
+            if (raw.body?.contentLength() == 0L) {
+                return@let Resource.Error("Not found")
+            }
+            return@let Resource.Success(body()!!)
+        }
+
+        code() == 404 -> Resource.Error("Not found")
+        code() == 400 -> Resource.Error("Something went wrong. Please try again")
+        code() == 500 -> Resource.Error("Server error")
+        else -> Resource.Error("Something went wrong. Please try again")
     }
 }
 
-fun <T> Response<T>.convertToBody(): T {
+fun <T> Response<T>.convertToBody(): T? {
     return when {
-        isSuccessful -> body()!!
-        code() == 404 -> throw RuntimeException("Not found.")
-        code() == 400 -> throw RuntimeException("Something went wrong. Please try again.")
-        code() == 500 -> throw RuntimeException("Server error.")
-        else -> throw RuntimeException("Something went wrong. Please try again.")
+        isSuccessful -> body()
+        code() == 404 -> throw RuntimeException("Not found")
+        code() == 400 -> throw RuntimeException("Something went wrong. Please try again")
+        code() == 500 -> throw RuntimeException("Server error")
+        else -> throw RuntimeException("Something went wrong. Please try again")
     }
 }

@@ -34,8 +34,14 @@ class MainActivity : ComponentActivity() {
 
 //        Handler(Looper.getMainLooper()).postDelayed({
 //            val device = OneSignal.getDeviceState()
-//            Log.d("user_id", device?.userId ?: "none")
+//            Log.d("TAG", device?.userId ?: "none")
 //        }, 10000)
+
+        var startDestination = AppDestination.Splash.route
+
+        if (intent.data != null) {
+            startDestination = AppDestination.Main.route
+        }
 
         setContent {
             Surface(
@@ -44,7 +50,8 @@ class MainActivity : ComponentActivity() {
             ) {
                 MainApp(
                     serviceLocator = serviceLocator,
-                    mainViewModel = mainViewModel
+                    mainViewModel = mainViewModel,
+                    startDestination = startDestination
                 )
             }
         }

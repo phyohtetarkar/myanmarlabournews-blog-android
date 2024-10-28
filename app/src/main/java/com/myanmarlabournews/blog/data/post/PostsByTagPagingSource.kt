@@ -8,7 +8,7 @@ import com.myanmarlabournews.blog.model.Post
 
 class PostsByTagPagingSource(
     private val tagId: Int,
-    private val lang: Post.Lang,
+    private val lang: Post.Lang?,
     private val tagApi: TagApi,
 ) : PagingSource<Int, Post>() {
     override fun getRefreshKey(state: PagingState<Int, Post>): Int? {
@@ -29,7 +29,7 @@ class PostsByTagPagingSource(
         return try {
             val page = params.key
             val resp = tagApi.getPostsByTag(tagId, page, lang)
-            val body = resp.convertToBody()
+            val body = resp.convertToBody() ?: throw RuntimeException("No data found")
             LoadResult.Page(
                 data = body.list,
                 prevKey = null,

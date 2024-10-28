@@ -20,6 +20,7 @@ class PostRepo(
         postRemoteDataSource.getLatestPosts(lang)
             .flowOn(Dispatchers.IO)
 
-    fun getPostsByType(type: Post.Type, lang: Post.Lang?) =
-        postRemoteDataSource.getPostsByType(type, lang)
+    fun getPostsByType(type: Post.Type, page: Int?, lang: Post.Lang?) =
+        postRemoteDataSource.getPostsByType(type, page, lang)
+            .flowOn(Dispatchers.IO)
 }

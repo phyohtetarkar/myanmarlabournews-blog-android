@@ -38,8 +38,8 @@ fun Long.timeAgo(): String {
 }
 
 fun String.wrapWithHtml(lightTheme: Boolean): String {
-    val background = if (!lightTheme) "background: rgb(18, 18, 18);" else ""
-    val color = if (!lightTheme) "color: rgb(210, 210, 210);" else ""
+    val background = if (!lightTheme) "background: rgb(18, 18, 18) !important;" else ""
+    val color = if (!lightTheme) "color: rgb(210, 210, 210) !important;" else ""
 
     return """
             <html>

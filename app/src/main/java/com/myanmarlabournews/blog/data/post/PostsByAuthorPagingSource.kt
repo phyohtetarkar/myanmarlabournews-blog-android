@@ -2,13 +2,14 @@ package com.myanmarlabournews.blog.data.post
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.myanmarlabournews.blog.data.author.AuthorApi
 import com.myanmarlabournews.blog.data.convertToBody
 import com.myanmarlabournews.blog.model.Post
 
-class PostsByTypePagingSource(
-    private val type: Post.Type,
+class PostsByAuthorPagingSource(
+    private val authorId: Long,
     private val lang: Post.Lang?,
-    private val postApi: PostApi
+    private val authorApi: AuthorApi,
 ) : PagingSource<Int, Post>() {
     override fun getRefreshKey(state: PagingState<Int, Post>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -20,7 +21,7 @@ class PostsByTypePagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {
         return try {
             val page = params.key
-            val resp = postApi.getPosts(type, page, lang)
+            val resp = authorApi.getPostsByAuthor(authorId, page, lang)
             val body = resp.convertToBody() ?: throw RuntimeException("No data found")
             LoadResult.Page(
                 data = body.list,
@@ -31,4 +32,5 @@ class PostsByTypePagingSource(
             LoadResult.Error(e)
         }
     }
+
 }

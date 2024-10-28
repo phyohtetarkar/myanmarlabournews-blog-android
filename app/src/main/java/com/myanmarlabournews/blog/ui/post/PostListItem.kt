@@ -53,7 +53,8 @@ fun PostListItem(
                 Text(
                     text = post.type.name,
                     color = Color.Gray,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(

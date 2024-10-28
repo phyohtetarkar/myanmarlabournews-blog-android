@@ -27,13 +27,15 @@ data class PostDetailUiState(
 
 class PostDetailViewModel(private val postRepo: PostRepo) : ViewModel() {
 
+    var launched = false
+
     private var _state = MutableStateFlow(PostDetailUiState.loading())
 
     val state: StateFlow<PostDetailUiState>
         get() = _state
 
     fun loadPost(slug: String) = viewModelScope.launch {
-        _state.update { it.copy(isLoading = true) }
+        _state.update { it.copy(isLoading = true, errorMessage = null) }
         postRepo.getPostBySlug(slug, null).collect { resource ->
             _state.update {
                 when (resource) {

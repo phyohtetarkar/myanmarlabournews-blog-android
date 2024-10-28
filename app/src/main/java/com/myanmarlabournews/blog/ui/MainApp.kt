@@ -12,6 +12,7 @@ import com.myanmarlabournews.blog.ui.theme.MyanmarLabourNewsTheme
 fun MainApp(
     mainViewModel: MainViewModel,
     serviceLocator: ServiceLocator,
+    startDestination: String = AppDestination.Main.route
 ) {
     val darkMode by mainViewModel.darkMode.collectAsState()
 
@@ -29,7 +30,8 @@ fun MainApp(
             navController = navController,
             serviceLocator = serviceLocator,
             navigationActions = navigationActions,
-            locale = locale
+            locale = locale,
+            startDestination = startDestination
         )
     }
 }

@@ -23,16 +23,20 @@ fun PostDetailRoute(
         viewModel.loadPost(slug)
     }
 
-    LaunchedEffect(key1 = true) {
-        delay(800)
-        currentOnTimeout()
+    LaunchedEffect(key1 = viewModel.launched) {
+        if (!viewModel.launched) {
+            delay(800)
+            currentOnTimeout()
+            viewModel.launched = true
+        }
     }
 
     PostDetailScreen(
         uiState = state,
         refresh = { viewModel.loadPost(slug) },
         navigateBack = { navigationActions.navigateUp() },
-        navigateToAuthor = {},
+        navigateToAuthor = { author -> navigationActions.navigateToPostsByAuthor(author) },
+        navigateToTag = { tag -> navigationActions.navigateToPostsByTag(tag) },
         snackbarHostState = snackbarHostState
     )
 

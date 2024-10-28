@@ -1,6 +1,10 @@
 package com.myanmarlabournews.blog
 
 import android.app.Application
+import android.app.TaskStackBuilder
+import android.content.Intent
+import androidx.core.net.toUri
+import com.myanmarlabournews.blog.ui.MainActivity
 import com.onesignal.OneSignal
 
 class MyanmarLabourNewsApplication : Application() {
@@ -23,6 +27,24 @@ class MyanmarLabourNewsApplication : Application() {
 
         OneSignal.setNotificationOpenedHandler { result ->
             val data = result.notification.additionalData
+
+            if (data.has("post_id")) {
+                val deepLinkIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    "https://www.myanmarlabournews.com/posts/${data.getString("post_id")}".toUri(),
+                    this,
+                    MainActivity::class.java
+                )
+
+                TaskStackBuilder.create(this)
+                    .addNextIntentWithParentStack(deepLinkIntent)
+                    .startActivities()
+
+//                val deepLinkPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
+//                    addNextIntentWithParentStack(deepLinkIntent)
+//                    getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+//                }
+            }
         }
     }
 

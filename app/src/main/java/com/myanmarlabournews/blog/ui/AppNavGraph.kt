@@ -21,21 +21,28 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.myanmarlabournews.blog.ServiceLocator
 import com.myanmarlabournews.blog.model.Post
 import com.myanmarlabournews.blog.ui.about.AboutScreen
 import com.myanmarlabournews.blog.ui.post.PostDetailRoute
 import com.myanmarlabournews.blog.ui.post.PostDetailViewModel
+import com.myanmarlabournews.blog.ui.post.PostsByAuthorRoute
+import com.myanmarlabournews.blog.ui.post.PostsByAuthorViewModel
+import com.myanmarlabournews.blog.ui.post.PostsByTagRoute
+import com.myanmarlabournews.blog.ui.post.PostsByTagViewModel
+import com.myanmarlabournews.blog.ui.post.PostsByTypeRoute
+import com.myanmarlabournews.blog.ui.post.PostsByTypeViewModel
 import com.myanmarlabournews.blog.ui.splash.SplashScreen
 
 @Composable
 fun AppNavGraph(
     serviceLocator: ServiceLocator,
     navigationActions: AppNavigationActions,
-    locale: Post.Lang = Post.Lang.MM,
     modifier: Modifier = Modifier,
+    locale: Post.Lang = Post.Lang.MM,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = AppDestination.Splash.route
+    startDestination: String = AppDestination.Main.route
 ) {
     var selectedItemIndex by remember { mutableStateOf(0) }
 
@@ -77,6 +84,10 @@ fun AppNavGraph(
         composable(
             AppDestination.Post.route,
             arguments = listOf(navArgument("slug") { type = NavType.StringType }),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "$uri/posts/{slug}" },
+                navDeepLink { uriPattern = "$uri/en/posts/{slug}" }
+            )
         ) { backStackEntry ->
             val viewModel = viewModel<PostDetailViewModel>(
                 factory = PostDetailViewModel.provideFactory(
@@ -91,24 +102,75 @@ fun AppNavGraph(
             )
         }
 
-//        composable(
-//            AppDestination.Post.route,
-//            deepLinks = listOf(
-//                navDeepLink { uriPattern = "$uri/posts/{slug}" },
-//                navDeepLink { uriPattern = "$uri/en/posts/{slug}" }
-//            )
-//        ) { backStackEntry ->
-//            val viewModel = viewModel<PostDetailViewModel>(
-//                factory = PostDetailViewModel.provideFactory(
-//                    serviceLocator.postRepo,
-//                )
-//            )
-//            PostDetailRoute(
-//                slug = backStackEntry.arguments?.getString("slug") ?: "",
-//                viewModel = viewModel,
-//                navigationActions = navigationActions
-//            )
-//        }
+        composable(
+            AppDestination.PostsByType.route,
+            arguments = listOf(navArgument("type") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val viewModel = viewModel<PostsByTypeViewModel>(
+                factory = PostsByTypeViewModel.provideFactory(
+                    serviceLocator.postRepo,
+                )
+            )
+
+            val type = backStackEntry.arguments?.getString("type") ?: "NEWS"
+
+            PostsByTypeRoute(
+                type = Post.Type.valueOf(type),
+                lang = locale,
+                viewModel = viewModel,
+                navigationActions = navigationActions
+            )
+        }
+
+        composable(
+            AppDestination.PostsByTag.route,
+            arguments = listOf(
+                navArgument("tagId") { type = NavType.IntType },
+                navArgument("tagName") { type = NavType.StringType }
+            ),
+        ) { backStackEntry ->
+            val viewModel = viewModel<PostsByTagViewModel>(
+                factory = PostsByTagViewModel.provideFactory(
+                    serviceLocator.tagRepo,
+                )
+            )
+
+            val tagId = backStackEntry.arguments?.getInt("tagId") ?: 0
+            val tagName = backStackEntry.arguments?.getString("tagName") ?: ""
+
+            PostsByTagRoute(
+                tagId = tagId,
+                tagName = tagName,
+                lang = locale,
+                viewModel = viewModel,
+                navigationActions = navigationActions
+            )
+        }
+
+        composable(
+            AppDestination.PostsByAuthor.route,
+            arguments = listOf(
+                navArgument("authorId") { type = NavType.LongType },
+                navArgument("authorName") { type = NavType.StringType }
+            ),
+        ) { backStackEntry ->
+            val viewModel = viewModel<PostsByAuthorViewModel>(
+                factory = PostsByAuthorViewModel.provideFactory(
+                    serviceLocator.authorRepo,
+                )
+            )
+
+            val authorId = backStackEntry.arguments?.getLong("authorId") ?: 0
+            val authorName = backStackEntry.arguments?.getString("authorName") ?: ""
+
+            PostsByAuthorRoute(
+                authorId = authorId,
+                authorName = authorName,
+                lang = locale,
+                viewModel = viewModel,
+                navigationActions = navigationActions
+            )
+        }
     }
 }
 

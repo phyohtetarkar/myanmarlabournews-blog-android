@@ -35,8 +35,8 @@ fun HomeRoute(
         navigateToPost = { post ->
             navigationActions.navigateToPost(post.slug)
         },
-        navigateToType = {
-
+        navigateToType = { type ->
+            navigationActions.navigateToPostsByType(type)
         },
     )
 }
