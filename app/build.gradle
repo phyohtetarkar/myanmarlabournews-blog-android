@@ -3,11 +3,11 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
-def getApiUrl() {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    return properties.getProperty("apiUrl")
-}
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def apiUrl = properties.getProperty("apiUrl")
+def oneSignalAppId = properties.getProperty("oneSignalAppId")
 
 android {
     namespace 'com.myanmarlabournews.blog'
@@ -28,13 +28,16 @@ android {
 
     buildTypes {
         def API_URL = "API_URL"
+        def ONE_SIGNAL_APP_ID = "ONE_SIGNAL_APP_ID"
 
         debug {
-            buildConfigField "String", API_URL, "\"" + getApiUrl() + "\""
+            buildConfigField "String", API_URL, "\"" + apiUrl + "\""
+            buildConfigField "String", ONE_SIGNAL_APP_ID, "\"" + oneSignalAppId + "\""
         }
 
         release {
-            buildConfigField "String", API_URL, "\"" + getApiUrl() + "\""
+            buildConfigField "String", API_URL, "\"" + apiUrl + "\""
+            buildConfigField "String", ONE_SIGNAL_APP_ID, "\"" + oneSignalAppId + "\""
 
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

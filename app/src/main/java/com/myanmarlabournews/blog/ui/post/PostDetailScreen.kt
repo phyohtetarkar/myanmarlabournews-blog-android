@@ -1,5 +1,6 @@
 package com.myanmarlabournews.blog.ui.post
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -245,11 +246,12 @@ fun PostDetailScreen(
                     }
                     Divider(thickness = 1.dp, modifier = Modifier.padding(top = 16.dp))
 
-                    ComposeWebView(
-                        content = post.body?.wrapWithHtml(MaterialTheme.colors.isLight) ?: ""
-                    )
+                    if (post.body != null) {
+                        ComposeWebView(
+                            content = post.body.wrapWithHtml(MaterialTheme.colors.isLight)
+                        )
+                    }
                 }
-
 
                 if (uiState.errorMessage != null) {
                     LaunchedEffect(snackbarHostState) {
@@ -272,6 +274,7 @@ fun PostDetailScreen(
     }
 }
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun ComposeWebView(
     content: String
