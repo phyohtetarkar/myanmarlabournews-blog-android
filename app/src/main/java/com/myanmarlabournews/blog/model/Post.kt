@@ -36,9 +36,9 @@ data class Post(
     }
 
     companion object {
-        fun fake(): Post {
+        fun fake(id: Long = 1): Post {
             return Post(
-                id = 1,
+                id = id,
                 title = "Post title",
                 slug = "post-title",
                 type = Post.Type.ARTICLE,

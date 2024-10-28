@@ -4,7 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
@@ -48,7 +48,7 @@ fun SearchScreen(
 ) {
     val state = rememberPullRefreshState(uiState.isLoading, refresh)
 
-    BoxWithConstraints(
+    Box(
         contentAlignment = Alignment.TopCenter,
         modifier = Modifier
             .pullRefresh(state)
@@ -160,7 +160,16 @@ fun SearchScreenPreview() {
             SearchScreen(
                 uiState = SearchUiState(
                     isLoading = false,
-                    tags = listOf(Tag.fake(), Tag.fake()),
+                    tags = listOf(
+                        Tag.fake(),
+                        Tag.fake(),
+                        Tag.fake(),
+                        Tag.fake(),
+                        Tag.fake(),
+                        Tag.fake(),
+                        Tag.fake(),
+                        Tag.fake()
+                    ),
                     errorMessage = null
                 ),
                 refresh = {},

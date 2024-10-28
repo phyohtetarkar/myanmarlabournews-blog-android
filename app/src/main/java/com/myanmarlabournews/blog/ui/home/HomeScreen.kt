@@ -115,7 +115,7 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 items(
-                    items = Post.Type.values()
+                    items = Post.Type.entries.toTypedArray()
                 ) { postType ->
                     PostType(
                         type = postType.name,

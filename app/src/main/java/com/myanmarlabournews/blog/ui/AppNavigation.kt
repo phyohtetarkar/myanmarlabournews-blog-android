@@ -7,26 +7,26 @@ import com.myanmarlabournews.blog.model.Tag
 
 sealed class AppDestination(val route: String) {
 
-    object Splash : AppDestination("splash")
+    data object Splash : AppDestination("splash")
 
-    object Main : AppDestination("main") {
-        object Home : AppDestination("home")
+    data object Main : AppDestination("main") {
+        data object Home : AppDestination("home")
 
-        object Search : AppDestination("search")
+        data object Search : AppDestination("search")
 
-        object Menu : AppDestination("menu")
+        data object Menu : AppDestination("menu")
     }
 
-    object About : AppDestination("about")
+    data object About : AppDestination("about")
 
-    object PostsByType : AppDestination("postsByType/{type}")
+    data object PostsByType : AppDestination("postsByType/{type}")
 
-    object PostsByTag : AppDestination("postsByTag?tagId={tagId}&tagName={tagName}")
+    data object PostsByTag : AppDestination("postsByTag?tagId={tagId}&tagName={tagName}")
 
-    object PostsByAuthor :
+    data object PostsByAuthor :
         AppDestination("postsByAuthor?authorId={authorId}&authorName={authorName}")
 
-    object Post : AppDestination("posts/{slug}")
+    data object Post : AppDestination("posts/{slug}")
 
 }
 
